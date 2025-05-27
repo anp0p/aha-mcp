@@ -20,7 +20,7 @@ npx -y aha-mcp@latest
 
 ```bash
 # Clone the repository
-git clone https://github.com/aha-develop/aha-mcp.git
+git clone git@github.com:anp0p/aha-mcp.git
 cd aha-mcp
 
 # Install dependencies
@@ -334,7 +334,16 @@ Creates a new feature in Aha! using the REST API
    - Verify the searchable type is valid
    - Ensure you have permissions to access the requested resources
 
-5. Environment variable issues:
+5. Feature creation errors (create_feature tool):
+   - **404 "Record not found"**: The `release_id` doesn't exist or you don't have access to it
+     - Verify the release ID format (e.g., "PRJ1-R-1", "PROJ-R-123")
+     - Check that the release exists in your Aha! workspace
+     - Ensure your API token has permissions to create features in that release
+   - **403 "Forbidden"**: Your API token lacks permissions to create features
+   - **422 "Unprocessable Entity"**: Invalid field values (check workflow_status names, user emails, etc.)
+   - To find valid release IDs: Use the Aha! UI or call `GET /api/v1/releases` endpoint
+
+6. Environment variable issues:
    - Make sure environment variables are properly set and accessible to the MCP server
    - Check that your secure storage method is correctly configured
    - Verify that the environment variables are being passed to the MCP server process
