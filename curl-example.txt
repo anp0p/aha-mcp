@@ -1,0 +1,82 @@
+# Direct curl command to test Aha! Create Feature REST API
+# Replace YOUR_DOMAIN, YOUR_API_TOKEN, and YOUR_RELEASE_ID with actual values
+
+# Basic example with required fields only:
+curl -X POST \
+  -H "Authorization: Bearer YOUR_API_TOKEN" \
+  -H "Content-Type: application/json" \
+  -H "Accept: application/json" \
+  -d '{
+    "feature": {
+      "name": "Basic Test Feature"
+    }
+  }' \
+  "https://YOUR_DOMAIN.aha.io/api/v1/releases/YOUR_RELEASE_ID/features"
+
+# Example with common fields:
+curl -X POST \
+  -H "Authorization: Bearer YOUR_API_TOKEN" \
+  -H "Content-Type: application/json" \
+  -H "Accept: application/json" \
+  -d '{
+    "feature": {
+      "name": "Sample Feature from API Test",
+      "workflow_kind": "new",
+      "workflow_status": {
+        "name": "Under consideration"
+      },
+      "description": "<p>Testing feature creation via REST API</p>",
+      "assigned_to_user": {
+        "email": "user@example.com"
+      },
+      "tags": "api-test,sample"
+    }
+  }' \
+  "https://YOUR_DOMAIN.aha.io/api/v1/releases/YOUR_RELEASE_ID/features"
+
+# Complete example with all optional fields:
+curl -X POST \
+  -H "Authorization: Bearer YOUR_API_TOKEN" \
+  -H "Content-Type: application/json" \
+  -H "Accept: application/json" \
+  -d '{
+    "feature": {
+      "name": "Complete Test Feature",
+      "workflow_kind": "new",
+      "workflow_status": {
+        "name": "Designed"
+      },
+      "description": "<p>Full feature test with all common fields</p>",
+      "assigned_to_user": {
+        "email": "developer@example.com"
+      },
+      "tags": "test,api,complete",
+      "initial_estimate_text": "3d",
+      "detailed_estimate_text": "2d 4h",
+      "start_date": "2024-02-01",
+      "due_date": "2024-02-15",
+      "initiative": "INIT-123",
+      "epic": "EPIC-456"
+    }
+  }' \
+  "https://YOUR_DOMAIN.aha.io/api/v1/releases/YOUR_RELEASE_ID/features"
+
+# Example matching the provided sample:
+curl -X POST \
+  -H "Authorization: Bearer YOUR_API_TOKEN" \
+  -H "Content-Type: application/json" \
+  -H "Accept: application/json" \
+  -d '{
+    "feature": {
+      "name": "New name",
+      "workflow_kind": "new",
+      "workflow_status": {
+        "name": "Designed"
+      },
+      "description": "<p>This is the description</p>",
+      "assigned_to_user": {
+        "email": "no-reply@aha.io"
+      }
+    }
+  }' \
+  "https://YOUR_DOMAIN.aha.io/api/v1/releases/YOUR_RELEASE_ID/features" 

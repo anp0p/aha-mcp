@@ -17,7 +17,6 @@ import {
   getRequirementQuery,
   getPageQuery,
   searchDocumentsQuery,
-  createFeatureMutation,
 } from "./queries.js";
 
 export class Handlers {
@@ -195,14 +194,38 @@ export class Handlers {
 
   async handleCreateFeature(request: any) {
     const {
-      name,
-      description,
-      product_id,
       release_id,
-      workflow_status_id,
-      assigned_to_user_id,
+      name,
+      workflow_kind,
+      workflow_status,
+      description,
+      created_by,
+      assigned_to_user,
       tags,
+      initial_estimate_text,
+      detailed_estimate_text,
+      remaining_estimate_text,
+      initial_estimate,
+      detailed_estimate,
+      remaining_estimate,
+      start_date,
+      due_date,
+      release_phase,
+      initiative,
+      epic,
+      progress_source,
+      progress,
+      team,
+      team_workflow_status,
+      iteration,
     } = request.params.arguments as CreateFeatureRequest;
+
+    if (!release_id) {
+      throw new McpError(
+        ErrorCode.InvalidParams,
+        "Release ID is required"
+      );
+    }
 
     if (!name) {
       throw new McpError(
@@ -212,22 +235,68 @@ export class Handlers {
     }
 
     try {
-      // Build the input object dynamically to only include provided fields
-      const input: any = { name };
+      // Build the feature object dynamically to only include provided fields
+      const feature: any = { name };
       
-      if (description) input.description = description;
-      if (product_id) input.product_id = product_id;
-      if (release_id) input.release_id = release_id;
-      if (workflow_status_id) input.workflow_status_id = workflow_status_id;
-      if (assigned_to_user_id) input.assigned_to_user_id = assigned_to_user_id;
-      if (tags && tags.length > 0) input.tags = tags;
+      if (workflow_kind) feature.workflow_kind = workflow_kind;
+      if (workflow_status) feature.workflow_status = workflow_status;
+      if (description) feature.description = description;
+      if (created_by) feature.created_by = created_by;
+      if (assigned_to_user) feature.assigned_to_user = assigned_to_user;
+      if (tags) feature.tags = tags;
+      if (initial_estimate_text) feature.initial_estimate_text = initial_estimate_text;
+      if (detailed_estimate_text) feature.detailed_estimate_text = detailed_estimate_text;
+      if (remaining_estimate_text) feature.remaining_estimate_text = remaining_estimate_text;
+      if (initial_estimate !== undefined) feature.initial_estimate = initial_estimate;
+      if (detailed_estimate !== undefined) feature.detailed_estimate = detailed_estimate;
+      if (remaining_estimate !== undefined) feature.remaining_estimate = remaining_estimate;
+      if (start_date) feature.start_date = start_date;
+      if (due_date) feature.due_date = due_date;
+      if (release_phase) feature.release_phase = release_phase;
+      if (initiative) feature.initiative = initiative;
+      if (epic) feature.epic = epic;
+      if (progress_source) feature.progress_source = progress_source;
+      if (progress !== undefined) feature.progress = progress;
+      if (team) feature.team = team;
+      if (team_workflow_status) feature.team_workflow_status = team_workflow_status;
+      if (iteration) feature.iteration = iteration;
 
-      const data = await this.client.request<CreateFeatureResponse>(
-        createFeatureMutation,
-        { input }
+      // Get the domain and token from the GraphQL client configuration
+      const ahaApiToken = process.env.AHA_API_TOKEN;
+      const ahaDomain = process.env.AHA_DOMAIN;
+
+      if (!ahaApiToken || !ahaDomain) {
+        throw new McpError(
+          ErrorCode.InternalError,
+          "Missing AHA_API_TOKEN or AHA_DOMAIN environment variables"
+        );
+      }
+
+      // Make REST API call instead of GraphQL
+      const response = await fetch(
+        `https://${ahaDomain}.aha.io/api/v1/releases/${release_id}/features`,
+        {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${ahaApiToken}`,
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+          body: JSON.stringify({ feature }),
+        }
       );
 
-      if (!data.createFeature?.feature) {
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new McpError(
+          ErrorCode.InternalError,
+          `Aha! API error (${response.status}): ${errorText}`
+        );
+      }
+
+      const data: CreateFeatureResponse = await response.json();
+
+      if (!data.feature) {
         throw new McpError(
           ErrorCode.InternalError,
           "Failed to create feature - no feature returned"
@@ -238,7 +307,7 @@ export class Handlers {
         content: [
           {
             type: "text",
-            text: JSON.stringify(data.createFeature.feature, null, 2),
+            text: JSON.stringify(data.feature, null, 2),
           },
         ],
       };

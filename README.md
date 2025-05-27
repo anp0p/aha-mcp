@@ -229,49 +229,62 @@ Searches for Aha! documents.
 
 ### 4. create_feature
 
-Creates a new feature in Aha!
+Creates a new feature in Aha! using the REST API
 
 **Parameters:**
+- `release_id` (required): Numeric ID or key of the release to create the feature in
 - `name` (required): Name of the feature
-- `description` (optional): Description of the feature
-- `product_id` (optional): ID of the product to create the feature in
-- `release_id` (optional): ID of the release to assign the feature to
-- `workflow_status_id` (optional): ID of the workflow status for the feature
-- `assigned_to_user_id` (optional): ID of the user to assign the feature to
-- `tags` (optional): Array of tags to apply to the feature
+- `workflow_kind` (optional): Type of feature
+- `workflow_status` (optional): Object with name or id of the workflow status
+- `description` (optional): Description of the feature (may include HTML formatting)
+- `assigned_to_user` (optional): Object with email or id of the assigned user
+- `tags` (optional): Comma-separated tags to apply to the feature
+- `initial_estimate_text` (optional): Initial estimated effort (e.g., "2d 1h" for time or "4p" for points)
+- `start_date` (optional): Date work will start (YYYY-MM-DD format)
+- `due_date` (optional): Date work is due (YYYY-MM-DD format)
+- `initiative` (optional): Name or ID of initiative
+- `epic` (optional): Name or ID of epic
+- `team` (optional): Numeric ID or key of the team
 
 **Example:**
 ```json
 {
+  "release_id": "PRJ1-R-1",
   "name": "New Mobile App Feature",
-  "description": "Implement push notifications for mobile app",
-  "product_id": "PROD-123",
-  "release_id": "REL-456",
-  "tags": ["mobile", "notifications"]
+  "workflow_kind": "new",
+  "workflow_status": {
+    "name": "Under consideration"
+  },
+  "description": "<p>Implement push notifications for mobile app</p>",
+  "assigned_to_user": {
+    "email": "developer@company.com"
+  },
+  "tags": "mobile,notifications,push"
 }
 ```
 
 **Response:**
 ```json
 {
-  "id": "FEAT-789",
+  "id": "12345",
   "reference_num": "DEVELOP-789",
   "name": "New Mobile App Feature",
-  "description": {
-    "markdownBody": "Implement push notifications for mobile app"
-  },
+  "description": "<p>Implement push notifications for mobile app</p>",
   "workflow_status": {
-    "id": "STATUS-123",
+    "id": "67890",
     "name": "Under consideration"
   },
-  "product": {
-    "id": "PROD-123",
-    "name": "Mobile App"
+  "assigned_to_user": {
+    "id": "54321",
+    "name": "John Developer",
+    "email": "developer@company.com"
   },
   "release": {
-    "id": "REL-456",
-    "name": "Q2 2024 Release"
-  }
+    "id": "11111",
+    "name": "Q2 2024 Release",
+    "reference_num": "PRJ1-R-1"
+  },
+  "tags": "mobile,notifications,push"
 }
 ```
 
@@ -282,8 +295,8 @@ Creates a new feature in Aha!
 - "Search for pages about launch planning"
 - "Get requirement ADT-123-1"
 - "Find all pages mentioning Q2 goals"
-- "Create a new feature called 'User Authentication'"
-- "Create a feature for mobile push notifications in product PROD-123"
+- "Create a new feature called 'User Authentication' in release PRJ1-R-1"
+- "Create a feature for mobile push notifications in release MOBILE-R-2"
 
 ## Configuration Options
 

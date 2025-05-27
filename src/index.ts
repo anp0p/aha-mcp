@@ -120,39 +120,96 @@ class AhaMcp {
           inputSchema: {
             type: "object",
             properties: {
+              release_id: {
+                type: "string",
+                description: "Numeric ID or key of the release (required)",
+              },
               name: {
                 type: "string",
                 description: "Name of the feature (required)",
               },
+              workflow_kind: {
+                type: "string",
+                description: "Type of feature",
+              },
+              workflow_status: {
+                type: "object",
+                properties: {
+                  name: {
+                    type: "string",
+                    description: "Name of the workflow status",
+                  },
+                  id: {
+                    type: "string",
+                    description: "ID of the workflow status",
+                  },
+                },
+                description: "Status of the feature",
+              },
               description: {
                 type: "string",
-                description: "Description of the feature",
+                description: "Description of the feature (may include HTML formatting)",
               },
-              product_id: {
+              created_by: {
                 type: "string",
-                description: "ID of the product to create the feature in",
+                description: "Email address of the user who created the feature",
               },
-              release_id: {
-                type: "string",
-                description: "ID of the release to assign the feature to",
-              },
-              workflow_status_id: {
-                type: "string",
-                description: "ID of the workflow status for the feature",
-              },
-              assigned_to_user_id: {
-                type: "string",
-                description: "ID of the user to assign the feature to",
+              assigned_to_user: {
+                type: "object",
+                properties: {
+                  email: {
+                    type: "string",
+                    description: "Email address of the assigned user",
+                  },
+                  id: {
+                    type: "string",
+                    description: "ID of the assigned user",
+                  },
+                },
+                description: "User assigned to the feature",
               },
               tags: {
-                type: "array",
-                items: {
-                  type: "string"
-                },
-                description: "Array of tags to apply to the feature",
+                type: "string",
+                description: "Tags to add to the feature (comma-separated)",
+              },
+              initial_estimate_text: {
+                type: "string",
+                description: "Initial estimated effort (e.g., '2d 1h' for time or '4p' for points)",
+              },
+              detailed_estimate_text: {
+                type: "string",
+                description: "Detailed estimated effort (e.g., '2d 1h' for time or '4p' for points)",
+              },
+              remaining_estimate_text: {
+                type: "string",
+                description: "Remaining estimated effort (e.g., '2d 1h' for time or '4p' for points)",
+              },
+              start_date: {
+                type: "string",
+                description: "Date that work will start (YYYY-MM-DD format)",
+              },
+              due_date: {
+                type: "string",
+                description: "Date that work is due to be completed (YYYY-MM-DD format)",
+              },
+              release_phase: {
+                type: "string",
+                description: "Name or ID of release phase",
+              },
+              initiative: {
+                type: "string",
+                description: "Name or ID of initiative",
+              },
+              epic: {
+                type: "string",
+                description: "Name or ID of epic",
+              },
+              team: {
+                type: "string",
+                description: "Numeric ID or key of the team",
               },
             },
-            required: ["name"],
+            required: ["release_id", "name"],
           },
         },
       ],
