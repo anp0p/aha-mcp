@@ -9,12 +9,15 @@ import {
   RequirementResponse,
   PageResponse,
   SearchResponse,
+  CreateFeatureRequest,
+  CreateFeatureResponse,
 } from "./types.js";
 import {
   getFeatureQuery,
   getRequirementQuery,
   getPageQuery,
   searchDocumentsQuery,
+  createFeatureMutation,
 } from "./queries.js";
 
 export class Handlers {
@@ -186,6 +189,70 @@ export class Handlers {
       throw new McpError(
         ErrorCode.InternalError,
         `Failed to search documents: ${errorMessage}`
+      );
+    }
+  }
+
+  async handleCreateFeature(request: any) {
+    const {
+      name,
+      description,
+      product_id,
+      release_id,
+      workflow_status_id,
+      assigned_to_user_id,
+      tags,
+    } = request.params.arguments as CreateFeatureRequest;
+
+    if (!name) {
+      throw new McpError(
+        ErrorCode.InvalidParams,
+        "Feature name is required"
+      );
+    }
+
+    try {
+      // Build the input object dynamically to only include provided fields
+      const input: any = { name };
+      
+      if (description) input.description = description;
+      if (product_id) input.product_id = product_id;
+      if (release_id) input.release_id = release_id;
+      if (workflow_status_id) input.workflow_status_id = workflow_status_id;
+      if (assigned_to_user_id) input.assigned_to_user_id = assigned_to_user_id;
+      if (tags && tags.length > 0) input.tags = tags;
+
+      const data = await this.client.request<CreateFeatureResponse>(
+        createFeatureMutation,
+        { input }
+      );
+
+      if (!data.createFeature?.feature) {
+        throw new McpError(
+          ErrorCode.InternalError,
+          "Failed to create feature - no feature returned"
+        );
+      }
+
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(data.createFeature.feature, null, 2),
+          },
+        ],
+      };
+    } catch (error) {
+      if (error instanceof McpError) {
+        throw error;
+      }
+
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
+      console.error("API Error:", errorMessage);
+      throw new McpError(
+        ErrorCode.InternalError,
+        `Failed to create feature: ${errorMessage}`
       );
     }
   }

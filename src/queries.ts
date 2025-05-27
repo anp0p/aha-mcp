@@ -55,3 +55,34 @@ export const searchDocumentsQuery = `
     }
   }
 `;
+
+export const createFeatureMutation = `
+  mutation CreateFeature($input: CreateFeatureInput!) {
+    createFeature(input: $input) {
+      feature {
+        id
+        reference_num
+        name
+        description {
+          markdownBody
+        }
+        workflow_status {
+          id
+          name
+        }
+        assigned_to_user {
+          id
+          name
+        }
+        product {
+          id
+          name
+        }
+        release {
+          id
+          name
+        }
+      }
+    }
+  }
+`;

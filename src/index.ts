@@ -114,6 +114,47 @@ class AhaMcp {
             required: ["query"],
           },
         },
+        {
+          name: "create_feature",
+          description: "Create a new feature in Aha!",
+          inputSchema: {
+            type: "object",
+            properties: {
+              name: {
+                type: "string",
+                description: "Name of the feature (required)",
+              },
+              description: {
+                type: "string",
+                description: "Description of the feature",
+              },
+              product_id: {
+                type: "string",
+                description: "ID of the product to create the feature in",
+              },
+              release_id: {
+                type: "string",
+                description: "ID of the release to assign the feature to",
+              },
+              workflow_status_id: {
+                type: "string",
+                description: "ID of the workflow status for the feature",
+              },
+              assigned_to_user_id: {
+                type: "string",
+                description: "ID of the user to assign the feature to",
+              },
+              tags: {
+                type: "array",
+                items: {
+                  type: "string"
+                },
+                description: "Array of tags to apply to the feature",
+              },
+            },
+            required: ["name"],
+          },
+        },
       ],
     }));
 
@@ -124,6 +165,8 @@ class AhaMcp {
         return this.handlers.handleGetPage(request);
       } else if (request.params.name === "search_documents") {
         return this.handlers.handleSearchDocuments(request);
+      } else if (request.params.name === "create_feature") {
+        return this.handlers.handleCreateFeature(request);
       }
 
       throw new McpError(

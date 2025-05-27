@@ -227,6 +227,54 @@ Searches for Aha! documents.
 }
 ```
 
+### 4. create_feature
+
+Creates a new feature in Aha!
+
+**Parameters:**
+- `name` (required): Name of the feature
+- `description` (optional): Description of the feature
+- `product_id` (optional): ID of the product to create the feature in
+- `release_id` (optional): ID of the release to assign the feature to
+- `workflow_status_id` (optional): ID of the workflow status for the feature
+- `assigned_to_user_id` (optional): ID of the user to assign the feature to
+- `tags` (optional): Array of tags to apply to the feature
+
+**Example:**
+```json
+{
+  "name": "New Mobile App Feature",
+  "description": "Implement push notifications for mobile app",
+  "product_id": "PROD-123",
+  "release_id": "REL-456",
+  "tags": ["mobile", "notifications"]
+}
+```
+
+**Response:**
+```json
+{
+  "id": "FEAT-789",
+  "reference_num": "DEVELOP-789",
+  "name": "New Mobile App Feature",
+  "description": {
+    "markdownBody": "Implement push notifications for mobile app"
+  },
+  "workflow_status": {
+    "id": "STATUS-123",
+    "name": "Under consideration"
+  },
+  "product": {
+    "id": "PROD-123",
+    "name": "Mobile App"
+  },
+  "release": {
+    "id": "REL-456",
+    "name": "Q2 2024 Release"
+  }
+}
+```
+
 ## Example Queries
 
 - "Get feature DEVELOP-123"
@@ -234,6 +282,8 @@ Searches for Aha! documents.
 - "Search for pages about launch planning"
 - "Get requirement ADT-123-1"
 - "Find all pages mentioning Q2 goals"
+- "Create a new feature called 'User Authentication'"
+- "Create a feature for mobile push notifications in product PROD-123"
 
 ## Configuration Options
 

@@ -51,3 +51,40 @@ export interface SearchResponse {
     isLastPage: boolean;
   };
 }
+
+export interface CreateFeatureRequest {
+  name: string;
+  description?: string;
+  product_id?: string;
+  release_id?: string;
+  workflow_status_id?: string;
+  assigned_to_user_id?: string;
+  tags?: string[];
+}
+
+export interface CreateFeatureResponse {
+  createFeature: {
+    feature: {
+      id: string;
+      reference_num: string;
+      name: string;
+      description: Description;
+      workflow_status?: {
+        id: string;
+        name: string;
+      };
+      assigned_to_user?: {
+        id: string;
+        name: string;
+      };
+      product?: {
+        id: string;
+        name: string;
+      };
+      release?: {
+        id: string;
+        name: string;
+      };
+    };
+  };
+}
