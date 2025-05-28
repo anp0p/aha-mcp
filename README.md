@@ -229,7 +229,7 @@ Searches for Aha! documents.
 
 ### 4. create_feature
 
-Creates a new feature in Aha! using the REST API
+Creates a new feature in Aha!
 
 **Parameters:**
 - `release_id` (required): Numeric ID or key of the release to create the feature in
