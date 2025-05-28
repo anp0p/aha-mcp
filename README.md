@@ -20,7 +20,7 @@ npx -y aha-mcp@latest
 
 ```bash
 # Clone the repository
-git clone git@github.com:anp0p/aha-mcp.git
+git clone https://github.com/aha-develop/aha-mcp.git
 cd aha-mcp
 
 # Install dependencies
